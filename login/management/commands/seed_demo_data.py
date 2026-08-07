@@ -89,14 +89,14 @@ class Command(BaseCommand):
 
         # (customer_name, customer_email, vendor_index, [(sku, qty), ...], status)
         order_specs = [
-            ('Jane Doe', 'jane@example.com', 0, [('TECH-001', 2), ('TECH-004', 1)], 'processed'),
-            ('John Smith', 'john@example.com', 0, [('TECH-002', 1), ('GLOB-002', 1)], 'shipped'),
-            ('Alice Brown', 'alice@example.com', 2, [('FRESH-001', 2), ('FRESH-003', 1)], 'shipped'),
-            ('Bob Wilson', 'bob@example.com', 0, [('TECH-003', 1)], 'pending'),
-            ('Carol Green', 'carol@example.com', 1, [('GLOB-001', 1)], 'cancelled'),
-            ('David Lee', 'david@example.com', 0, [('TECH-001', 3)], 'processed'),
-            ('Emma Davis', 'emma@example.com', 1, [('GLOB-002', 2)], 'shipped'),
-            ('Frank Miller', 'frank@example.com', 2, [('FRESH-002', 1)], 'pending'),
+            ('Divyansh Singh', 'divyansh@example.com', 0, [('TECH-001', 2), ('TECH-004', 1)], 'processed'),
+            ('Ruhi Rathore', 'ruhi@example.com', 0, [('TECH-002', 1), ('GLOB-002', 1)], 'shipped'),
+            ('Naman Sahu', 'naman@example.com', 2, [('FRESH-001', 2), ('FRESH-003', 1)], 'shipped'),
+            ('Preeti Kaur', 'preeti@example.com', 0, [('TECH-003', 1)], 'pending'),
+            ('Dheeraj Singh', 'dheeraj@example.com', 1, [('GLOB-001', 1)], 'cancelled'),
+            ('Ansh Rahangdale', 'ansh@example.com', 0, [('TECH-001', 3)], 'processed'),
+            ('Ayush Rathore', 'ayush@example.com', 1, [('GLOB-002', 2)], 'shipped'),
+            ('Ayushi Kashyp', 'ayushi@example.com', 2, [('FRESH-002', 1)], 'pending'),
         ]
 
         for customer_name, customer_email, vi, items, status in order_specs:
