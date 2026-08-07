@@ -19,7 +19,7 @@ A multi-vendor inventory and order management system built with Django, Django R
 
 - Python / Django 6
 - Django REST Framework
-- SQLite (dev) / PostgreSQL (production)
+- PostgreSQL (SQLite used as a fallback when no DB is configured)
 - Celery + Redis (with sync/fallback mode)
 - django-celery-beat for scheduled low-stock checks
 - ReportLab for PDF invoice generation
@@ -35,17 +35,27 @@ source .venv/bin/activate     # Linux/macOS
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Apply migrations
+# 3. Configure the database (optional)
+#    Create a .env file in the project root with your PostgreSQL credentials:
+#    DB_ENGINE=django.db.backends.postgresql
+#    DB_NAME=inventory
+#    DB_USER=postgres
+#    DB_PASSWORD=yourpassword
+#    DB_HOST=localhost
+#    DB_PORT=5432
+#    If no .env is present, the app falls back to SQLite.
+
+# 4. Apply migrations
 python manage.py migrate
 
-# 4. Create role groups and a superuser
+# 5. Create role groups and a superuser
 python manage.py seed_roles
 python manage.py createsuperuser
 
-# 5. (Optional) Load demo data so the UI is populated
+# 6. (Optional) Load demo data so the UI is populated
 python manage.py seed_demo_data
 
-# 6. Run the server
+# 7. Run the server
 python manage.py runserver
 ```
 
@@ -77,6 +87,12 @@ celery -A inventory worker -B -l info
 | `/api/reports/summary/` | GET | Inventory KPIs |
 | `/api/reports/top-products/` | GET | Best-selling products |
 | `/api/reports/vendors/` | GET | Per-vendor revenue |
+
+## Deploy to Render
+
+A `render.yaml` blueprint is included. Deploy via **Render Dashboard → New → Blueprint**, select this repo, and Render will provision the web service plus a managed PostgreSQL database. Key environment variables (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DATABASE_URL`, etc.) are wired up automatically. After the first deploy, run `seed_roles` and `createsuperuser` from the service's Shell tab.
+
+To use an existing PostgreSQL database instead of the managed one, set the `DATABASE_URL` env var (e.g. `postgres://user:pass@host:5432/dbname`) on the service.
 
 ## Testing
 

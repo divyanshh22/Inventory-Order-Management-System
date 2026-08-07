@@ -12,7 +12,7 @@ services:
     autoDeploy: true
     buildCommand: "bash build.sh"
     startCommand: "gunicorn inventory.wsgi:application"
-    healthCheckPath: /api/reports/summary/
+    healthCheckPath: /
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
