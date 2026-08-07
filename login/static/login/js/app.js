@@ -230,7 +230,7 @@
 
     $('#search').addEventListener('input', (e) => { search = e.target.value; render(); });
     $('#low-stock').addEventListener('change', (e) => { lowStock = e.target.checked; render(); });
-    $('#add-btn').addEventListener('click', () => productForm());
+    $('#add-btn')?.addEventListener('click', () => productForm());
     $('#rows').addEventListener('click', async (e) => {
       const edit = e.target.closest('[data-edit]');
       const del = e.target.closest('[data-del]');
@@ -289,7 +289,7 @@
     }
 
     $('#search').addEventListener('input', (e) => { search = e.target.value; render(); });
-    $('#add-btn').addEventListener('click', () => vendorForm());
+    $('#add-btn')?.addEventListener('click', () => vendorForm());
     $('#rows').addEventListener('click', async (e) => {
       const edit = e.target.closest('[data-edit]');
       const del = e.target.closest('[data-del]');
@@ -403,7 +403,7 @@
       });
     }
 
-    $('#add-btn').addEventListener('click', orderForm);
+    $('#add-btn')?.addEventListener('click', orderForm);
     $('#rows').addEventListener('click', async (e) => {
       const btn = e.target.closest('[data-act]');
       if (!btn) return;
