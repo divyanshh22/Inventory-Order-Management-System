@@ -10,7 +10,7 @@ services:
     runtime: python
     plan: free
     autoDeploy: true
-    buildCommand: "./build.sh"
+    buildCommand: "bash build.sh"
     startCommand: "gunicorn inventory.wsgi:application"
     healthCheckPath: /api/reports/summary/
     envVars:
