@@ -1,0 +1,25 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block auth_title %}Sign in{% endblock %} · Inventory & Order Management</title>
+  <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
+</head>
+<body class="auth-body">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <span class="brand-mark">I</span>
+        <div>
+          <strong>Inventory</strong>
+          <small>Order Management</small>
+        </div>
+      </div>
+      <h1 class="auth-heading">{% block auth_heading %}{% endblock %}</h1>
+      {% block auth_content %}{% endblock %}
+    </div>
+    <p class="auth-foot">Inventory &amp; Order Management System</p>
+  </div>
+</body>
+</html>

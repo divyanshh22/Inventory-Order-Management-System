@@ -55,11 +55,22 @@ python manage.py createsuperuser
 # 6. (Optional) Load demo data so the UI is populated
 python manage.py seed_demo_data
 
-# 7. Run the server
+# 7. (Optional) Create demo accounts so anyone can log in
+python manage.py seed_demo_users
+
+# 8. Run the server
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/ — you'll be redirected to `/dashboard/` after logging in via the admin panel.
+Open http://127.0.0.1:8000/ — you'll be redirected to the public login page at `/login/`. Visitors can either create their own account (`/register/`) or use the demo accounts:
+
+| Username | Password | Role |
+| --- | --- | --- |
+| `admin` | `Admin@123` | Superuser / Admins |
+| `staff` | `Staff@123` | Staff (read-only) |
+| `vendor` | `Vendor@123` | Vendors |
+
+New registrations are added to the `Staff` group (read-only) by default; change this via the `DEFAULT_REGISTRATION_GROUP` env var.
 
 ## Celery (optional)
 

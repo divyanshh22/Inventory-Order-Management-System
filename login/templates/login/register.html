@@ -1,0 +1,18 @@
+{% extends 'login/auth.html' %}
+{% block auth_title %}Create an account{% endblock %}
+{% block auth_heading %}Create your account{% endblock %}
+{% block auth_content %}
+<form method="post" novalidate class="auth-form">
+  {% csrf_token %}
+  {% for field in form %}
+    <label class="form-row">
+      <span>{{ field.label }}</span>
+      {{ field }}
+      {% for err in field.errors %}<span class="field-error">{{ err }}</span>{% endfor %}
+      {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+    </label>
+  {% endfor %}
+  <button class="btn btn-primary auth-submit" type="submit">Create account</button>
+</form>
+<p class="auth-alt">Already have an account? <a href="/login/">Sign in</a></p>
+{% endblock %}

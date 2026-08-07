@@ -481,7 +481,7 @@ class DashboardUITests(TestCase):
         for page in self.PAGES:
             resp = client.get(f'/{page}/')
             self.assertEqual(resp.status_code, 302, msg=page)
-            self.assertIn('/admin/login/', resp.url, msg=page)
+            self.assertIn('/login/', resp.url, msg=page)
 
     def test_pages_render_for_staff(self):
         self.client.force_login(self.user)
@@ -492,5 +492,56 @@ class DashboardUITests(TestCase):
     def test_root_redirects_to_dashboard(self):
         self.client.force_login(self.user)
         resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/dashboard/')
+
+
+class AuthUITests(TestCase):
+    def setUp(self):
+        Group.objects.create(name='Staff')
+        Group.objects.create(name='Admins')
+
+    def test_login_page_renders(self):
+        resp = self.client.get('/login/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_register_page_renders(self):
+        resp = self.client.get('/register/')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_login_success_redirects_to_dashboard(self):
+        User.objects.create_user(username='demo', password='Passw0rd!2026')
+        resp = self.client.post('/login/', {'username': 'demo', 'password': 'Passw0rd!2026'})
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/dashboard/')
+
+    def test_login_failure_shows_error(self):
+        resp = self.client.post('/login/', {'username': 'nobody', 'password': 'wrong'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Invalid username or password')
+
+    def test_register_creates_staff_user_and_logs_in(self):
+        resp = self.client.post('/register/', {
+            'username': 'newbie',
+            'email': 'newbie@example.com',
+            'password1': 'Passw0rd!2026',
+            'password2': 'Passw0rd!2026',
+        })
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/dashboard/')
+        user = User.objects.get(username='newbie')
+        self.assertEqual(user.groups.filter(name='Staff').count(), 1)
+
+    def test_logout_logs_out_and_redirects_to_login(self):
+        User.objects.create_user(username='demo', password='Passw0rd!2026')
+        self.client.login(username='demo', password='Passw0rd!2026')
+        resp = self.client.get('/logout/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/login/')
+
+    def test_authenticated_users_cannot_visit_login(self):
+        User.objects.create_user(username='demo', password='Passw0rd!2026')
+        self.client.login(username='demo', password='Passw0rd!2026')
+        resp = self.client.get('/login/')
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, '/dashboard/')
