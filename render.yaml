@@ -1,0 +1,32 @@
+databases:
+  - name: inventory-db
+    plan: free
+    databaseName: inventory
+    user: inventory
+
+services:
+  - type: web
+    name: inventory-web
+    runtime: python
+    plan: free
+    autoDeploy: true
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn inventory.wsgi:application"
+    healthCheckPath: /api/reports/summary/
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "inventory-web.onrender.com"
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: "https://inventory-web.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: inventory-db
+          property: connectionString
+      - key: CELERY_TASK_ALWAYS_EAGER
+        value: "true"
+      - key: PYTHON_VERSION
+        value: "3.12.0"

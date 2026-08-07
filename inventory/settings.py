@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,12 +23,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-r6m(s=(nh3^wj4$i2vckimmb))a*&+)(mx4x6cpvb2x9+ngrr!'
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-r6m(s=(nh3^wj4$i2vckimmb))a*&+)(mx4x6cpvb2x9+ngrr!',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv(
+    'DJANGO_ALLOWED_HOSTS', '*'
+).split(',')
+
+CSRF_TRUSTED_ORIGINS = [
+    o for o in os.getenv(
+        'DJANGO_CSRF_TRUSTED_ORIGINS', ''
+    ).split(',') if o
+]
 
 
 # Application definition
@@ -46,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,7 +95,18 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': dj_database_url.config(
+        default=os.getenv(
+            'DB_ENGINE_URL',
+            'sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        ),
+        conn_max_age=600,
+    )
+}
+
+# Allow the discrete DB_* variables (used locally) to override the URL.
+if 'DB_ENGINE' in os.environ:
+    DATABASES['default'] = {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
         'NAME': os.getenv('DB_NAME', str(BASE_DIR / 'db.sqlite3')),
         'USER': os.getenv('DB_USER', ''),
@@ -89,7 +114,6 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST', ''),
         'PORT': os.getenv('DB_PORT', ''),
     }
-}
 
 
 # Password validation
@@ -127,6 +151,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
