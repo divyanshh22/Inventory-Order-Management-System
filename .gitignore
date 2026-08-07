@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Django
+*.log
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+celerybeat-schedule*
+celerybeat.pid
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Unused/unfinished skeleton (not part of the Django project)
+inventory_system/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Env
+.env

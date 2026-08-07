@@ -1,0 +1,30 @@
+{% extends 'login/base.html' %}
+{% block page_name %}movements{% endblock %}
+{% block title %}Stock Movements{% endblock %}
+{% block heading %}Stock Movements{% endblock %}
+{% block content %}
+
+<div class="toolbar">
+  <select id="type" class="input">
+    <option value="">All types</option>
+    <option value="IN">Stock In</option>
+    <option value="OUT">Stock Out</option>
+    <option value="ADJUSTMENT">Adjustment</option>
+  </select>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th><th>Type</th><th>Reference</th>
+        <th class="num">Qty</th><th class="num">Before</th>
+        <th class="num">After</th><th>Notes</th><th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No movements found.</p>
+</div>
+
+{% endblock %}

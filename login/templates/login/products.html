@@ -1,0 +1,39 @@
+{% extends 'login/base.html' %}
+{% block page_name %}products{% endblock %}
+{% block title %}Products{% endblock %}
+{% block heading %}Products{% endblock %}
+{% block content %}
+
+<div class="toolbar">
+  <input id="search" class="input" type="search" placeholder="Search by name…" autocomplete="off">
+  <label class="check"><input id="low-stock" type="checkbox"> Low stock only</label>
+  <button class="btn btn-primary" id="add-btn">+ New Product</button>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>SKU</th><th>Name</th><th>Vendor</th>
+        <th class="num">Price</th><th class="num">Stock</th>
+        <th class="num">Reorder</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No products found.</p>
+</div>
+
+<script>
+  window.PRODUCT_FORM = [
+    { name: 'name', label: 'Name', type: 'text', required: true },
+    { name: 'sku', label: 'SKU', type: 'text', required: true },
+    { name: 'price', label: 'Price', type: 'number', step: '0.01', required: true },
+    { name: 'stock_quantity', label: 'Stock quantity', type: 'number', step: '1' },
+    { name: 'reorder_level', label: 'Reorder level', type: 'number', step: '1' },
+    { name: 'vendor_id', label: 'Vendor', type: 'select', required: true },
+    { name: 'description', label: 'Description', type: 'textarea' },
+  ];
+</script>
+
+{% endblock %}

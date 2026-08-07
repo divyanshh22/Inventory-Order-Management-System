@@ -1,0 +1,41 @@
+{% extends 'login/base.html' %}
+{% block page_name %}dashboard{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block content %}
+
+<section class="cards" id="stat-cards"><!-- injected by JS --></section>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-head">
+      <h2>Orders by Status</h2>
+    </div>
+    <div id="status-bars" class="bars"><!-- injected by JS --></div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <h2>Top Selling Products</h2>
+    </div>
+    <table class="table">
+      <thead>
+        <tr><th>Product</th><th class="num">Units</th><th class="num">Revenue</th></tr>
+      </thead>
+      <tbody id="top-products"><!-- injected by JS --></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h2>Vendor Performance</h2>
+  </div>
+  <table class="table">
+    <thead>
+      <tr><th>Vendor</th><th class="num">Products</th><th class="num">Orders</th><th class="num">Revenue</th></tr>
+    </thead>
+    <tbody id="vendor-report"><!-- injected by JS --></tbody>
+  </table>
+</div>
+
+{% endblock %}

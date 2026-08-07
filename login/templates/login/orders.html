@@ -1,0 +1,24 @@
+{% extends 'login/base.html' %}
+{% block page_name %}orders{% endblock %}
+{% block title %}Orders{% endblock %}
+{% block heading %}Orders{% endblock %}
+{% block content %}
+
+<div class="toolbar">
+  <button class="btn btn-primary" id="add-btn">+ New Order</button>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order</th><th>Customer</th><th>Vendor</th>
+        <th class="num">Total</th><th>Status</th><th>Created</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No orders found.</p>
+</div>
+
+{% endblock %}

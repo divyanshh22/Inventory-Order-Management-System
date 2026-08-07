@@ -1,0 +1,20 @@
+{% extends 'login/base.html' %}
+{% block page_name %}invoices{% endblock %}
+{% block title %}Invoices{% endblock %}
+{% block heading %}Invoices{% endblock %}
+{% block content %}
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Invoice</th><th>Order</th><th>Customer</th>
+        <th class="num">Total</th><th>Issued</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No invoices yet.</p>
+</div>
+
+{% endblock %}

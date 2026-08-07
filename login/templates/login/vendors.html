@@ -1,0 +1,33 @@
+{% extends 'login/base.html' %}
+{% block page_name %}vendors{% endblock %}
+{% block title %}Vendors{% endblock %}
+{% block heading %}Vendors{% endblock %}
+{% block content %}
+
+<div class="toolbar">
+  <input id="search" class="input" type="search" placeholder="Search vendors…" autocomplete="off">
+  <button class="btn btn-primary" id="add-btn">+ New Vendor</button>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th><th>Contact</th><th>Email</th><th>Phone</th><th>Created</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No vendors found.</p>
+</div>
+
+<script>
+  window.VENDOR_FORM = [
+    { name: 'name', label: 'Vendor name', type: 'text', required: true },
+    { name: 'contact_person', label: 'Contact person', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'text' },
+  ];
+</script>
+
+{% endblock %}

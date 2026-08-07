@@ -1,0 +1,23 @@
+{% extends 'login/base.html' %}
+{% block page_name %}alerts{% endblock %}
+{% block title %}Alerts{% endblock %}
+{% block heading %}Low Stock Alerts{% endblock %}
+{% block content %}
+
+<div class="toolbar">
+  <label class="check"><input id="show-resolved" type="checkbox"> Show resolved</label>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th><th>Message</th><th>Created</th><th>Status</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="rows"><!-- injected by JS --></tbody>
+  </table>
+  <p id="empty" class="empty hidden">No alerts.</p>
+</div>
+
+{% endblock %}
