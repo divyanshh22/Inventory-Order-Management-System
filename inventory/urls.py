@@ -23,7 +23,7 @@ from login import ui_views
 urlpatterns = [
     path('', lambda request: redirect('/dashboard/')),
     path('login/', ui_views.login_view, name='login'),
-    path('register/', ui_views.register_view, name='register'),
+    path('guest/', ui_views.guest_view, name='guest'),
     path('logout/', ui_views.logout_view, name='logout'),
     path('dashboard/', ui_views.page, {'name': 'dashboard'}, name='ui-dashboard'),
     path('products/', ui_views.page, {'name': 'products'}, name='ui-products'),

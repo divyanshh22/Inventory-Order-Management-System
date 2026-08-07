@@ -7,12 +7,12 @@ import os
 
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
-from .forms import RegisterForm
+from .permissions import MANAGEMENT_GROUPS
 
 PAGES = (
     'dashboard',
@@ -24,14 +24,25 @@ PAGES = (
     'movements',
 )
 
-DEFAULT_REGISTRATION_GROUP = os.getenv('DEFAULT_REGISTRATION_GROUP', 'Staff')
+GUEST_USERNAME = os.getenv('GUEST_USERNAME', 'guest')
+
+
+def _can_write(user):
+    """Staff/management users can mutate data; everyone else is read-only."""
+    if not user or not user.is_authenticated:
+        return False
+    if user.is_superuser or user.is_staff:
+        return True
+    return user.groups.filter(name__in=MANAGEMENT_GROUPS).exists()
 
 
 @login_required
 def page(request, name):
     if name not in PAGES:
         raise Http404
-    return render(request, f'login/{name}.html')
+    return render(request, f'login/{name}.html', {
+        'can_write': _can_write(request.user),
+    })
 
 
 @require_http_methods(['GET', 'POST'])
@@ -57,24 +68,24 @@ def login_view(request):
 
 
 @require_http_methods(['GET', 'POST'])
-def register_view(request):
+def guest_view(request):
+    """Log in as a shared read-only guest user."""
     if request.user.is_authenticated:
         return redirect('ui-dashboard')
 
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            try:
-                user.groups.add(Group.objects.get(name=DEFAULT_REGISTRATION_GROUP))
-            except Group.DoesNotExist:
-                pass
-            auth.login(request, user)
-            return redirect('ui-dashboard')
-    else:
-        form = RegisterForm()
+    guest, created = User.objects.get_or_create(username=GUEST_USERNAME)
+    if created:
+        guest.set_unusable_password()
+        guest.is_active = True
+        guest.email = 'guest@example.com'
+        try:
+            guest.groups.add(Group.objects.get(name='Staff'))
+        except Group.DoesNotExist:
+            pass
+        guest.save()
 
-    return render(request, 'login/register.html', {'form': form})
+    auth.login(request, guest)
+    return redirect('ui-dashboard')
 
 
 @require_http_methods(['GET', 'POST'])

@@ -7,7 +7,7 @@
   <title>{% block title %}Inventory{% endblock %} · Inventory & Order Management</title>
   <link rel="stylesheet" href="{% static 'login/css/style.css' %}">
 </head>
-<body data-page="{% block page_name %}{% endblock %}">
+<body data-page="{% block page_name %}{% endblock %}" data-can-write="{% if can_write %}1{% else %}0{% endif %}">
 
   <aside class="sidebar">
     <div class="brand">

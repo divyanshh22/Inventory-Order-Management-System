@@ -12,7 +12,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Product</th><th>Message</th><th>Created</th><th>Status</th><th></th>
+        <th>Product</th><th>Message</th><th>Created</th><th>Status</th>{% if can_write %}<th></th>{% endif %}
       </tr>
     </thead>
     <tbody id="rows"><!-- injected by JS --></tbody>

@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="toolbar">
-  <button class="btn btn-primary" id="add-btn">+ New Order</button>
+  {% if can_write %}<button class="btn btn-primary" id="add-btn">+ New Order</button>{% endif %}
 </div>
 
 <div class="card">
@@ -13,7 +13,7 @@
     <thead>
       <tr>
         <th>Order</th><th>Customer</th><th>Vendor</th>
-        <th class="num">Total</th><th>Status</th><th>Created</th><th>Actions</th>
+        <th class="num">Total</th><th>Status</th><th>Created</th>{% if can_write %}<th>Actions</th>{% endif %}
       </tr>
     </thead>
     <tbody id="rows"><!-- injected by JS --></tbody>

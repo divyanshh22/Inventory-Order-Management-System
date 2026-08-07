@@ -55,22 +55,23 @@ python manage.py createsuperuser
 # 6. (Optional) Load demo data so the UI is populated
 python manage.py seed_demo_data
 
-# 7. (Optional) Create demo accounts so anyone can log in
-python manage.py seed_demo_users
+# 7. Create a superuser for full access
+python manage.py createsuperuser
 
 # 8. Run the server
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/ — you'll be redirected to the public login page at `/login/`. Visitors can either create their own account (`/register/`) or use the demo accounts:
+Open http://127.0.0.1:8000/ — you'll land on the public login page at `/login/`. Sign in with your superuser credentials for full access, or click **Continue as Guest** to browse the app in read-only mode (view dashboard, products, orders, invoices, alerts, and reports — but no editing or deleting).
 
-| Username | Password | Role |
-| --- | --- | --- |
-| `admin` | `Admin@123` | Superuser / Admins |
-| `staff` | `Staff@123` | Staff (read-only) |
-| `vendor` | `Vendor@123` | Vendors |
+## Guest Mode
 
-New registrations are added to the `Staff` group (read-only) by default; change this via the `DEFAULT_REGISTRATION_GROUP` env var.
+Guests are signed in as a shared `guest` user in the `Staff` role, so they can view everything but all write actions are blocked:
+
+- **Can view**: dashboard, products, orders, invoices, alerts, stock movements, reports
+- **Cannot do**: create/edit/delete products or vendors, create orders, process/ship/cancel orders, resolve alerts
+
+The guest account is created automatically on first login (override its username via the `GUEST_USERNAME` env var).
 
 ## Celery (optional)
 

@@ -461,13 +461,19 @@ class InventoryAPITests(TestCase):
         self.assertEqual(vendors.data['vendors'][0]['name'], 'Acme Tech')
         self.assertEqual(vendors.data['vendors'][0]['revenue'], Decimal("499.00"))
 
-    def test_reports_require_staff(self):
-        user = User.objects.create_user(username='outsider', password='secret123')
+    def test_reports_require_authentication(self):
+        anonymous = APIClient()
+        resp = anonymous.get('/api/reports/summary/')
+        self.assertIn(resp.status_code, (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN))
+
+    def test_reports_readable_by_read_only_user(self):
+        user = User.objects.create_user(username='viewer', password='secret123')
+        user.groups.add(Group.objects.get_or_create(name='Staff')[0])
         token = Token.objects.create(user=user)
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
         resp = client.get('/api/reports/summary/')
-        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
 
 class DashboardUITests(TestCase):
@@ -505,10 +511,6 @@ class AuthUITests(TestCase):
         resp = self.client.get('/login/')
         self.assertEqual(resp.status_code, 200)
 
-    def test_register_page_renders(self):
-        resp = self.client.get('/register/')
-        self.assertEqual(resp.status_code, 200)
-
     def test_login_success_redirects_to_dashboard(self):
         User.objects.create_user(username='demo', password='Passw0rd!2026')
         resp = self.client.post('/login/', {'username': 'demo', 'password': 'Passw0rd!2026'})
@@ -520,17 +522,15 @@ class AuthUITests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Invalid username or password')
 
-    def test_register_creates_staff_user_and_logs_in(self):
-        resp = self.client.post('/register/', {
-            'username': 'newbie',
-            'email': 'newbie@example.com',
-            'password1': 'Passw0rd!2026',
-            'password2': 'Passw0rd!2026',
-        })
+    def test_guest_mode_logs_in_read_only_user(self):
+        resp = self.client.get('/guest/')
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, '/dashboard/')
-        user = User.objects.get(username='newbie')
-        self.assertEqual(user.groups.filter(name='Staff').count(), 1)
+
+    def test_guest_user_is_in_staff_group(self):
+        self.client.get('/guest/')
+        guest = User.objects.get(username='guest')
+        self.assertEqual(guest.groups.filter(name='Staff').count(), 1)
 
     def test_logout_logs_out_and_redirects_to_login(self):
         User.objects.create_user(username='demo', password='Passw0rd!2026')

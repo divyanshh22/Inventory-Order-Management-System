@@ -358,6 +358,26 @@ body.auth-body { display: block; }
 .auth-alt { text-align: center; font-size: 14px; color: var(--muted); margin-top: 16px; }
 .auth-alt a { color: var(--primary); font-weight: 600; }
 
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin: 18px 0 14px;
+}
+
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-submit.secondary { margin-top: 10px; }
+
 .auth-demo {
   margin-top: 22px;
   padding-top: 16px;

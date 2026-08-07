@@ -6,14 +6,14 @@
 
 <div class="toolbar">
   <input id="search" class="input" type="search" placeholder="Search vendors…" autocomplete="off">
-  <button class="btn btn-primary" id="add-btn">+ New Vendor</button>
+  {% if can_write %}<button class="btn btn-primary" id="add-btn">+ New Vendor</button>{% endif %}
 </div>
 
 <div class="card">
   <table class="table">
     <thead>
       <tr>
-        <th>Name</th><th>Contact</th><th>Email</th><th>Phone</th><th>Created</th><th></th>
+        <th>Name</th><th>Contact</th><th>Email</th><th>Phone</th><th>Created</th>{% if can_write %}<th></th>{% endif %}
       </tr>
     </thead>
     <tbody id="rows"><!-- injected by JS --></tbody>

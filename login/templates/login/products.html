@@ -7,7 +7,7 @@
 <div class="toolbar">
   <input id="search" class="input" type="search" placeholder="Search by name…" autocomplete="off">
   <label class="check"><input id="low-stock" type="checkbox"> Low stock only</label>
-  <button class="btn btn-primary" id="add-btn">+ New Product</button>
+  {% if can_write %}<button class="btn btn-primary" id="add-btn">+ New Product</button>{% endif %}
 </div>
 
 <div class="card">
@@ -16,7 +16,7 @@
       <tr>
         <th>SKU</th><th>Name</th><th>Vendor</th>
         <th class="num">Price</th><th class="num">Stock</th>
-        <th class="num">Reorder</th><th>Status</th><th></th>
+        <th class="num">Reorder</th><th>Status</th>{% if can_write %}<th></th>{% endif %}
       </tr>
     </thead>
     <tbody id="rows"><!-- injected by JS --></tbody>

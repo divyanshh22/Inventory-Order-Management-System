@@ -5,14 +5,14 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers, status
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import reports
 from .invoice_utils import generate_invoice_pdf
 from .models import Invoice, Order, OrderItem, Product, StockAlert, StockMovement, Vendor
-from .permissions import IsStaffOrReadOnly, IsStaffRole
+from .permissions import IsAnyRole, IsStaffOrReadOnly, IsStaffRole
 from .serializers import (
     InvoiceSerializer,
     OrderItemSerializer,
@@ -129,7 +129,7 @@ class ProductRetrieveUpdateDestroyView(APIView):
 
 
 class OrderListCreateView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsStaffOrReadOnly]
 
     def get(self, request):
         orders = Order.objects.select_related('vendor').prefetch_related('items').all()
@@ -262,7 +262,7 @@ class StockAlertListView(APIView):
 
 
 class StockAlertResolveView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsStaffRole]
 
     def post(self, request, pk):
         alert = get_object_or_404(StockAlert, pk=pk)
@@ -284,7 +284,7 @@ class StockMovementListView(APIView):
 
 class ReportSummaryView(APIView):
     """Dashboard metrics for inventory and orders."""
-    permission_classes = [IsStaffRole]
+    permission_classes = [IsAnyRole]
 
     def get(self, request):
         return Response(reports.inventory_summary())
@@ -292,7 +292,7 @@ class ReportSummaryView(APIView):
 
 class TopProductsReportView(APIView):
     """Best-selling products ranked by units sold."""
-    permission_classes = [IsStaffRole]
+    permission_classes = [IsAnyRole]
 
     def get(self, request):
         limit = int(request.query_params.get('limit', 10))
@@ -301,7 +301,7 @@ class TopProductsReportView(APIView):
 
 class VendorReportView(APIView):
     """Per-vendor product, order, and revenue breakdown."""
-    permission_classes = [IsStaffRole]
+    permission_classes = [IsAnyRole]
 
     def get(self, request):
         return Response({'vendors': reports.vendor_report()})

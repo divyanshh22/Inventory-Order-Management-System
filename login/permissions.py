@@ -42,6 +42,20 @@ class IsVendorRole(BasePermission):
         return user_in_groups(request.user, ('Vendors',))
 
 
+class IsAnyRole(BasePermission):
+    """Allow access to any authenticated user, regardless of role.
+
+    Used for read-only endpoints (e.g. reports) so that read-only staff and
+    guest users can view dashboards.
+    """
+
+    message = 'Authentication is required.'
+
+    def has_permission(self, request, view):
+        user = request.user
+        return user is not None and user.is_authenticated
+
+
 class IsStaffOrReadOnly(BasePermission):
     """Allow safe methods to anyone; writes require staff/management role."""
 

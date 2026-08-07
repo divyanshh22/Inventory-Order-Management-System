@@ -6,6 +6,8 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  const CAN_WRITE = document.body.dataset.canWrite === '1';
+
   const esc = (v) =>
     String(v ?? '').replace(/[&<>"']/g, (c) => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
@@ -197,10 +199,11 @@
               <td class="num">${p.stock_quantity}</td>
               <td class="num">${p.reorder_level}</td>
               <td>${stockBadge(p.stock_quantity, p.reorder_level)}</td>
+              ${CAN_WRITE ? `
               <td class="actions">
                 <button class="btn btn-plain btn-sm" data-edit="${p.id}">Edit</button>
                 <button class="btn btn-danger btn-sm" data-del="${p.id}">Delete</button>
-              </td>
+              </td>` : ''}
             </tr>`).join('')
         : '';
     }
@@ -260,10 +263,11 @@
               <td>${esc(v.email)}</td>
               <td>${esc(v.phone || '—')}</td>
               <td>${fmtDate(v.created_at)}</td>
+              ${CAN_WRITE ? `
               <td class="actions">
                 <button class="btn btn-plain btn-sm" data-edit="${v.id}">Edit</button>
                 <button class="btn btn-danger btn-sm" data-del="${v.id}">Delete</button>
-              </td>
+              </td>` : ''}
             </tr>`).join('')
         : '';
     }
@@ -316,11 +320,12 @@
               <td class="num">${money(o.total_amount)}</td>
               <td>${statusBadge(o.status)}</td>
               <td>${fmtDate(o.created_at)}</td>
+              ${CAN_WRITE ? `
               <td class="actions">
                 ${o.status === 'pending' ? `<button class="btn btn-success btn-sm" data-act="process" data-id="${o.id}">Process</button>` : ''}
                 ${o.status === 'processed' ? `<button class="btn btn-success btn-sm" data-act="ship" data-id="${o.id}">Ship</button>` : ''}
                 ${(o.status === 'pending' || o.status === 'processed') ? `<button class="btn btn-danger btn-sm" data-act="cancel" data-id="${o.id}">Cancel</button>` : ''}
-              </td>
+              </td>` : ''}
             </tr>`).join('')
         : '';
     }
@@ -444,7 +449,7 @@
               <td>${esc(a.message)}</td>
               <td>${fmtDate(a.created_at)}</td>
               <td>${a.resolved ? badge('Resolved', 'in-stock') : badge('Open', 'out')}</td>
-              <td>${a.resolved ? '' : `<button class="btn btn-success btn-sm" data-resolve="${a.id}">Mark resolved</button>`}</td>
+              ${CAN_WRITE ? `<td>${a.resolved ? '' : `<button class="btn btn-success btn-sm" data-resolve="${a.id}">Mark resolved</button>`}</td>` : ''}
             </tr>`).join('')
         : '';
     }

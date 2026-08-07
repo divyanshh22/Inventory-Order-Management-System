@@ -15,12 +15,9 @@
   {% if error %}<p class="auth-error">{{ error }}</p>{% endif %}
   <button class="btn btn-primary auth-submit" type="submit">Sign in</button>
 </form>
-<p class="auth-alt">Don't have an account? <a href="/register/">Create one</a></p>
 
-<div class="auth-demo">
-  <h4>Demo accounts</h4>
-  <p>admin&nbsp;&nbsp;/ <code>Admin@123</code></p>
-  <p>staff&nbsp;&nbsp;/ <code>Staff@123</code></p>
-  <p>vendor / <code>Vendor@123</code></p>
-</div>
+<div class="auth-divider"><span>or</span></div>
+
+<a class="btn btn-plain auth-submit" href="/guest/">Continue as Guest</a>
+<p class="auth-alt">Guest mode is read-only — you can browse products, orders, and the dashboard, but you cannot edit or delete anything.</p>
 {% endblock %}
